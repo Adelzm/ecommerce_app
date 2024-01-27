@@ -1,6 +1,19 @@
+import 'package:db_client/db_client.dart';
+import 'package:ecommerce_app/repositories/categories_repo.dart';
+import 'package:ecommerce_app/screens/categories_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+final DbClient dbClient = DbClient();
+final CategoriesRepo categoriesRepo = CategoriesRepo(dbClient);
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await categoriesRepo.createCategories();
   runApp(const MainApp());
 }
 
@@ -9,12 +22,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return MaterialApp(
+      title: 'E-Commerce App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
       ),
+      home: const CategoriesScreen(),
     );
   }
 }
